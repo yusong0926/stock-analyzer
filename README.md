@@ -2,7 +2,7 @@
 
 A big data platform to process stock data in real time.
 
-Stock data as we know is time series data, I grab data from yahoo finance and every record of data are around 200 bytes. For every record has last trading time,  last trading price , last trading currency, and the stock symbol, apple for example. For time series data, I need a way to quickly consume the data and pull to my system really fast so I chose apache kafka, which is high perfomence messging system, I was able to achieve  200k msg/s, if you count the messges multipy bu the size of the data, you will get 2T data / day, of course normal storage system wouldn't fit in my case. So I chose apache cassandra which is highly scalable peer to peer data storage system. The reason I chose it is also because  cassandra is peer to peer system, no single point failure , every node can go and I can simply grab a new one without hustle. Thirdly, because the data streamed in, I need a way to process data in real time, that is why I chose apache spark. I used spark streaming api to write simple algorithm to proces the data in real time.  Now I have all the way to store and process data, then I need way to visualize the data and present to other people.  So I developed a simple web app using redis, nodejs, and soket io to render the process result in web ui. I use nodejs, becaouse it's easy framework, and I use the socket io to keep websocket connection btw server and client so I can get server to push data to client in real time. So you can see stock change on the ui in real timeA
+Stock data as we know is time series data, I grab data from google finance and every record of data are around 200 bytes. For every record has last trading time,  last trading price , last trading currency, and the stock symbol, apple for example. For time series data, I need a way to quickly consume the data and pull to my system really fast so I chose apache kafka, which is high perfomence messging system, I was able to achieve  200k msg/s, if you count the messges multipy bu the size of the data, you will get 2T data / day, of course normal storage system wouldn't fit in my case. So I chose apache cassandra which is highly scalable peer to peer data storage system. The reason I chose it is also because  cassandra is peer to peer system, no single point failure , every node can go and I can simply grab a new one without hustle. Thirdly, because the data streamed in, I need a way to process data in real time, that is why I chose apache spark. I used spark streaming api to write simple algorithm to proces the data in real time.  Now I have all the way to store and process data, then I need way to visualize the data and present to other people.  So I developed a simple web app using redis, nodejs, and soket io to render the process result in web ui. I use nodejs, becaouse it's easy framework, and I use the socket io to keep websocket connection btw server and client so I can get server to push data to client in real time. So you can see stock change on the ui in real timeA
 
 
 ## Getting Started
@@ -21,50 +21,52 @@ npm install
 
 ####Install spark-submit
 
-####Install Containers
+####Install and Start Containers for Zookeeper, Kafka, Redis and Cassandra 
+
+Run local-setup.sh to setup all the containers.
+
 ```
 ./local-setup.sh
 ```
 
-
 ### Installing
 
-####Start Kafka
+####Start Kafka to grab data from google finanace
 ```
-python simple-data-producer.py AAPL stock-analyzer 0.0.0.0:9092
+python simple-data-producer.py AAPL stock-analyzer 127.0.0.1:9092
 ```
+###Setup the Database
 
-####Start Casandra
+```
+CREATE KEYSPACE "stock" WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 1} AND durable_writes = 'true';
+USE stock;
+CREATE TABLE stock (stock_symbol text, trade_time timestamp, trade_price float, PRIMARY KEY (stock_symbol,trade_time));
+```
+####Start Casandra to store the data
+
 ```
 python data-storage.py stock-analyzer 127.0.0.1:9092 stock stock 127.0.0.1
 ```
 
-####Start Spark
+####Start Spark to Process the data from Kafka and Send back to Kafka with another topic
 ```
-../../Downloads/spark/bin/spark-submit --jars spark-streaming-kafka-assembly_2.10-1.6.2.jar stream-processing.py stock-analyzer average-stock-price 127.0.0.1:9092
+spark-submit --jars spark-streaming-kafka-assembly_2.10-1.6.2.jar stream-processing.py stock-analyzer average-stock-price 127.0.0.1:9092
 ```
-####Start Redis
+####Start Redis to Cache the data
 ```
 python redis-publisher.py average-stock-price 127.0.0.1:9092 average-stock-price 127.0.0.1 6379
 ```
-####Start NodeJs
+####Start NodeJs to read data from Redis and Visualize them to Frontend
 ```
 node index.js --port=3000 --redis_host=192.168.99.100 --redis_port=6379 --subscribe_topic=average-stock-price
 ```
-####Visualize
+####Visualize the Data
 http://localhost:3000
-
-
-
-## Deployment
-
-Add additional notes about how to deploy this on a live system
-
 
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the MIT License.
 
 ## Acknowledgments
 
