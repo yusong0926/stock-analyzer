@@ -10,7 +10,7 @@ Stock data as we know is time series data, I grab data from google finance and e
 
 ### Prerequisites
 
-####Install Depencies
+####Install Dependencies
 
 ```
 pip install -r requirements.txt
