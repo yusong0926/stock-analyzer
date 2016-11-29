@@ -1,19 +1,89 @@
-Synopsis
+# Project Title
 
-A big data platform to process stock data in real time. Stock data as we know is time series data, I grab data from yahoo finance and every record of data are around 200 bytes. For every record has last trading time,  last trading price , last trading currency, and the stock symbol, apple for example. For time series data, I need a way to quickly consume the data and pull to my system really fast so I chose apache kafka, which is high perfomence messging system, I was able to achieve  200k msg/s, if you count the messges multipy bu the size of the data, you will get 2T data / day, of course normal storage system wouldn't fit in my case. So I chose apache cassandra which is highly scalable peer to peer data storage system. The reason I chose it is also because  cassandra is peer to peer system, no single point failure , every node can go and I can simply grab a new one without hustle. Thirdly, because the data streamed in, I need a way to process data in real time, that is why I chose apache spark. I used spark streaming api to write simple algorithm to proces the data in real time.  Now I have all the way to store and process data, then I need way to visualize the data and present to other people.  So I developed a simple web app using redis, nodejs, and soket io to render the process result in web ui. I use nodejs, becaouse it's easy framework, and I use the socket io to keep websocket connection btw server and client so I can get server to push data to client in real time. So you can see stock change on the ui in real timeA
+one Paragraph of project description goes here
 
+## Getting Started
 
-Installation
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
+### Prerequisites
 
+What things you need to install the software and how to install them
 
-Dependencies
+```
+Give examples
+```
 
+### Installing
 
+A step by step series of examples that tell you have to get a development env running
 
+Say what the step will be
 
-How to Run
+```
+Give the example
+```
 
+And repeat
 
+```
+until finished
+```
+
+End with an example of getting some data out of the system or using it for a little demo
+
+## Running the tests
+
+Explain how to run the automated tests for this system
+
+### Break down into end to end tests
+
+Explain what these tests test and why
+
+```
+Give an example
+```
+
+### And coding style tests
+
+Explain what these tests test and why
+
+```
+Give an example
+```
+
+## Deployment
+
+Add additional notes about how to deploy this on a live system
+
+## Built With
+
+* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
+* [Maven](https://maven.apache.org/) - Dependency Management
+* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
+
+## Contributing
+
+Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
+
+## Versioning
+
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
+
+## Authors
+
+* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
+
+See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+
+## Acknowledgments
+
+* Hat tip to anyone who's code was used
+* Inspiration
+* etc
 
 
