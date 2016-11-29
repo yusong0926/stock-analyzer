@@ -29,13 +29,13 @@ Run local-setup.sh to setup all the containers.
 ./local-setup.sh
 ```
 
-### Installing
+###How to Run 
 
 ####Start Kafka to grab data from google finanace
 ```
 python simple-data-producer.py AAPL stock-analyzer 127.0.0.1:9092
 ```
-###Setup the Database
+###Setup the database
 
 ```
 CREATE KEYSPACE "stock" WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 1} AND durable_writes = 'true';
@@ -48,15 +48,15 @@ CREATE TABLE stock (stock_symbol text, trade_time timestamp, trade_price float, 
 python data-storage.py stock-analyzer 127.0.0.1:9092 stock stock 127.0.0.1
 ```
 
-####Start Spark to Process the data from Kafka and Send back to Kafka with another topic
+####Start Spark to process the data from Kafka and send back to Kafka with another topic
 ```
 spark-submit --jars spark-streaming-kafka-assembly_2.10-1.6.2.jar stream-processing.py stock-analyzer average-stock-price 127.0.0.1:9092
 ```
-####Start Redis to Cache the data
+####Start Redis to cache the data
 ```
 python redis-publisher.py average-stock-price 127.0.0.1:9092 average-stock-price 127.0.0.1 6379
 ```
-####Start NodeJs to read data from Redis and Visualize them to Frontend
+####Start NodeJs to read data from Redis and visualize them to frontend
 ```
 node index.js --port=3000 --redis_host=192.168.99.100 --redis_port=6379 --subscribe_topic=average-stock-price
 ```
