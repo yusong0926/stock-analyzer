@@ -21,6 +21,8 @@ npm install
 
 ####Install spark-submit
 
+####Install Docker
+
 ####Install and Start Containers for Zookeeper, Kafka, Redis and Cassandra 
 
 Run local-setup.sh to setup all the containers.
